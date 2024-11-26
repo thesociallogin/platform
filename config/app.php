@@ -52,7 +52,8 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://thesociallogin.test'),
+    'platform_url' => env('APP_URL_PLATFORM', 'https://platform.thesociallogin.test'),
 
     /*
     |--------------------------------------------------------------------------
