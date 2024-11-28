@@ -12,7 +12,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: 'Switzer, system-ui, sans-serif',
+        sans: 'Inter, system-ui, sans-serif',
       },
       borderRadius: {
         lg: 'var(--radius)',

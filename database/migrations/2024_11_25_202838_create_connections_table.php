@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Team;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('connections', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Team::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignUuid('team_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
+            $table->text('secret')->nullable();
+            $table->json('scopes')->nullable();
+            $table->string('redirect_url');
+            $table->boolean('revoked')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

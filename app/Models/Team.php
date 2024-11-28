@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use Database\Factories\TeamFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 /**
- * @property int $id
+ * @property string $id
  * @property string $name
  * @property string $email
  * @property string $slug
@@ -38,7 +40,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Team extends Model
 {
     /** @use HasFactory<TeamFactory> */
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     /**
      * @var string[]
@@ -48,6 +50,21 @@ class Team extends Model
         'email',
         'slug',
     ];
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Team $model) {
+            if (blank($model->slug)) {
+                $model->forceFill([
+                    'slug' => filled($model->name)
+                        ? Str::slug($model->name)
+                        : Str::random(8),
+                ]);
+            }
+        });
+    }
 
     public function connections(): HasMany
     {

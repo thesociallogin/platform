@@ -13,11 +13,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('providers', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignIdFor(Team::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
+            $table->string('display_name')->nullable();
+            $table->string('type');
+            $table->string('provider');
+            $table->mediumText('client_id')->nullable();
+            $table->mediumText('client_secret')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

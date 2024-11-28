@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('oauth_clients', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignUuid('team_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('secret', 100)->nullable();
             $table->string('provider')->nullable();

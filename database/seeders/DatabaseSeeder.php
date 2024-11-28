@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Connection;
+use App\Models\Enums\ProviderType;
 use App\Models\Provider;
 use App\Models\Team;
 use App\Models\User;
@@ -12,7 +13,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
+    //use WithoutModelEvents;
 
     public function run(): void
     {
@@ -25,9 +26,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@deschutesdesigngroup.com',
         ]))->has(Provider::factory()->state([
             'name' => 'Provider 1',
-        ]), 'providers')->has(Connection::factory()->state([
+            'type' => ProviderType::OAUTH,
+            'provider' => \App\Models\Enums\Provider::CUSTOM,
+        ]), 'providers')->has(Connection::factory()->forPostman()->state([
             'name' => 'Connection 1',
         ]), 'connections')->create();
-
     }
 }

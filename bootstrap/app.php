@@ -11,6 +11,12 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        then: function () {
+            Route::domain(config('app.login_url'))
+                ->as('login.')
+                ->namespace('App\\Http\\Controllers\\Login')
+                ->group(base_path('routes/login.php'));
+        }
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo(fn () => route('filament.platform.auth.login'));

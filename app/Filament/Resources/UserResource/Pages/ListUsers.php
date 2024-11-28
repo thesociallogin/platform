@@ -10,6 +10,8 @@ class ListUsers extends ListRecords
 {
     protected static string $resource = UserResource::class;
 
+    protected ?string $subheading = 'All authenticated user profiles that have used your account to authenticate with one of your services.';
+
     protected function getHeaderActions(): array
     {
         return [

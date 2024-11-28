@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * @property int $id
- * @property int|null $user_id
- * @property int|null $team_id
+ * @property string|null $user_id
+ * @property string|null $team_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  *

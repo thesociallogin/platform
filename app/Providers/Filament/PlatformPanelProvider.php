@@ -5,7 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\EditTeamProfile;
 use App\Filament\Pages\TeamRegistration;
 use App\Models\Team;
-use App\Providers\BoringAvatarsProvider;
+use Filament\FontProviders\SpatieGoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -33,8 +33,10 @@ class PlatformPanelProvider extends PanelProvider
             ->domain(config('app.platform_url'))
             ->login()
             ->registration()
+            ->passwordReset()
+            ->font('Inter', provider: SpatieGoogleFontProvider::class)
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Zinc,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
