@@ -21,6 +21,10 @@ return new class extends Migration
             $table->string('provider');
             $table->mediumText('client_id')->nullable();
             $table->mediumText('client_secret')->nullable();
+            $table->mediumText('authorization_endpoint')->nullable();
+            $table->mediumText('token_endpoint')->nullable();
+            $table->mediumText('userinfo_endpoint')->nullable();
+            $table->mediumText('redirect_url')->nullable();
             $table->timestamps();
         });
     }

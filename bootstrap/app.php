@@ -16,10 +16,15 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->as('login.')
                 ->namespace('App\\Http\\Controllers\\Login')
                 ->group(base_path('routes/login.php'));
+
+            Route::domain(config('app.account_url'))
+                ->as('passport.')
+                ->namespace('Laravel\\Passport\\Http\\Controllers')
+                ->group(base_path('routes/passport.php'));
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->redirectGuestsTo(fn () => route('filament.platform.auth.login'));
+        $middleware->redirectGuestsTo(fn () => route('filament.account.auth.login'));
         $middleware->web(append: [
             HandleInertiaRequests::class,
         ]);

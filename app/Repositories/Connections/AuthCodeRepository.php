@@ -12,7 +12,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
     public function getNewAuthCode(): AuthCodeEntityInterface
     {
-        return new AuthCode;
+        return AuthCode::from(AuthCode::empty());
     }
 
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity): void
@@ -29,9 +29,8 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
 
     public function revokeAuthCode($codeId): void
     {
-        // TODO: Change this back
         ConnectionAuthCode::whereKey($codeId)->update([
-            'revoked' => false,
+            'revoked' => true,
         ]);
     }
 

@@ -19,6 +19,14 @@ class Scope implements BaseDataContract, ScopeEntityInterface
         $this->setIdentifier($this->scope);
     }
 
+    public static function fromString(string $scope): Scope
+    {
+        return new self(
+            scope: $scope,
+            description: new Optional
+        );
+    }
+
     public function jsonSerialize(): string
     {
         return $this->getIdentifier();

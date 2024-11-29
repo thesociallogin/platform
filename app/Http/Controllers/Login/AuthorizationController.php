@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Login;
 
 use App\Contracts\Connections\ConnectionAuthorizationServerInterface;
+use App\Contracts\Connections\IdentityProvider;
+use App\Data\Connections\Client;
 use App\Data\Connections\User;
 use App\Exceptions\ConnectionAuthenticationException;
 use App\Exceptions\ConnectionServerException;
 use App\Http\Controllers\Controller;
+use App\Models\ConnectionRequest;
 use App\Models\Provider;
 use App\Models\User as UserModel;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -22,24 +25,42 @@ class AuthorizationController extends Controller
 
     public function __construct(
         protected ConnectionAuthorizationServerInterface $server,
-        protected StatefulGuard $guard
+        protected StatefulGuard $guard,
+        protected IdentityProvider $identityProvider,
     ) {
         //
     }
 
     /**
      * @throws ConnectionServerException
+     * @throws ConnectionAuthenticationException
      */
     public function __invoke(ServerRequestInterface $psrRequest, Request $request, Provider $provider): Response
     {
+        /** @var AuthorizationRequest $authRequest */
         $authRequest = $this->withErrorHandling(function () use ($psrRequest) {
             return $this->server->validateAuthorizationRequest($psrRequest);
         });
 
-        $this->guard->login(UserModel::first());
+        /** @var Client $client */
+        $client = $authRequest->getClient();
+
+        if (blank($client->connection)) {
+            abort(401, 'We could not identify the connection making the request.');
+        }
+
+        if (! $client->connection->providers->contains($provider->getKey())) {
+            abort(401, 'The provider being requested is not assigned to the connection making the request.');
+        }
 
         if ($this->guard->guest()) {
-            //return $this->promptForLogin($request, $provider);
+            $connectionRequest = ConnectionRequest::create([
+                'redirect_url' => $request->getRequestUri(),
+            ]);
+
+            $request->session()->put('connectionrequest', $connectionRequest->getKey());
+
+            return $this->promptForLogin($request);
         }
 
         /** @var UserModel $user */
@@ -63,10 +84,10 @@ class AuthorizationController extends Controller
     /**
      * @throws ConnectionAuthenticationException
      */
-    protected function promptForLogin(Request $request, Provider $provider)
+    protected function promptForLogin(Request $request)
     {
         $request->session()->put('promptedForLogin', true);
 
-        throw new ConnectionAuthenticationException($provider);
+        throw new ConnectionAuthenticationException($this->identityProvider);
     }
 }

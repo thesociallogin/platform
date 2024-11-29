@@ -13,23 +13,19 @@ class Client extends Data implements ClientEntityInterface
     use ClientTrait, EntityTrait;
 
     public function __construct(
-        public string $connectionId,
-        public string $connectionName,
-        public string|array $connectionRedirectUrl
+        public Connection $connection
     ) {
-        $this->setIdentifier($this->connectionId);
+        $this->setIdentifier($this->connection->getKey());
 
-        $this->name = $this->connectionName;
+        $this->name = $this->connection->name;
         $this->isConfidential = true;
-        $this->redirectUri = $this->connectionRedirectUrl;
+        $this->redirectUri = $this->connection->redirect_url;
     }
 
     public static function fromModel(Connection $connection): Client
     {
         return new self(
-            connectionId: $connection->getKey(),
-            connectionName: $connection->name,
-            connectionRedirectUrl: $connection->redirect_url,
+            connection: $connection,
         );
     }
 }

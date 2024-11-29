@@ -3,9 +3,13 @@
 namespace App\Providers;
 
 use App\Contracts\Connections\ConnectionAuthorizationServerInterface;
+use App\Contracts\Connections\IdentityProvider;
+use App\Contracts\Connections\IdentityRepositoryInterface;
 use App\Guards\ConnectionGuard;
 use App\Http\Controllers\Login\AuthorizationController;
+use App\Http\Controllers\Login\CallbackController;
 use App\Http\Responses\IdTokenResponse;
+use App\Models\Provider;
 use App\Repositories\Connections\AccessTokenRepository;
 use App\Repositories\Connections\AuthCodeRepository;
 use App\Repositories\Connections\ClientRepository;
@@ -21,6 +25,7 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
@@ -36,9 +41,33 @@ class ConnectionProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(IdentityRepositoryInterface::class, IdentityRepository::class);
+
         $this->app->when(AuthorizationController::class)
             ->needs(StatefulGuard::class)
             ->give(fn () => Auth::guard('web'));
+
+        $this->app->when(AuthorizationController::class)
+            ->needs(IdentityProvider::class)
+            ->give(function (Application $application) {
+                /** @var Provider $provider */
+                $provider = $application->make('request')->route('provider');
+
+                return $application->makeWith($provider->provider->getProvider(), [
+                    'provider' => $provider,
+                ]);
+            });
+
+        $this->app->when(CallbackController::class)
+            ->needs(IdentityProvider::class)
+            ->give(function (Application $application) {
+                /** @var Provider $provider */
+                $provider = $application->make('request')->route('provider');
+
+                return $application->makeWith($provider->provider->getProvider(), [
+                    'provider' => $provider,
+                ]);
+            });
 
         $this->registerAuthorizationServer();
         $this->registerGuard();
@@ -72,7 +101,7 @@ class ConnectionProvider extends ServiceProvider
                 keyPermissionsCheck: true
             ),
             encryptionKey: $this->app->make('encrypter')->getKey(),
-            responseType: new IdTokenResponse(new IdentityRepository)
+            responseType: $this->app->make(IdTokenResponse::class)
         );
     }
 

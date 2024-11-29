@@ -14,15 +14,16 @@ class User extends Data implements IdentityEntityInterface, UserEntityInterface
     use ClaimsTrait, EntityTrait;
 
     public function __construct(
-        public string $userId,
-        public array $attributes,
+        public UserModel $user,
     ) {
-        $this->setIdentifier($this->userId);
-        $this->setClaims($this->attributes);
+        $this->setIdentifier($this->user->getAuthIdentifier());
+        $this->setClaims($this->user->getClaims());
     }
 
     public static function fromModel(UserModel $user): User
     {
-        return new self($user->getAuthIdentifier(), $user->getClaims());
+        return new self(
+            user: $user
+        );
     }
 }

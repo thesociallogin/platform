@@ -4,7 +4,6 @@ namespace App\Data\Connections;
 
 use App\Models\ConnectionAccessToken;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
@@ -15,24 +14,20 @@ class AccessToken extends Data implements AccessTokenEntityInterface
     use AccessTokenTrait, EntityTrait, TokenEntityTrait;
 
     public function __construct(
-        public ?string $userId,
-        public array $requestedScopes,
-        public ClientEntityInterface $tokenClient
+        public ConnectionAccessToken $connectionAccessToken,
     ) {
-        $this->setUserIdentifier($this->userId);
-        $this->setClient($this->tokenClient);
+        $this->setUserIdentifier($this->connectionAccessToken->user_id);
+        $this->setClient(Client::from($this->connectionAccessToken->connection));
 
-        foreach ($this->requestedScopes as $scope) {
-            $this->addScope($scope);
+        foreach ($this->connectionAccessToken->scopes as $scope) {
+            $this->addScope(Scope::from($scope));
         }
     }
 
-    public function fromModel(ConnectionAccessToken $token): AccessToken
+    public function fromModel(ConnectionAccessToken $connectionAccessToken): AccessToken
     {
         return new self(
-            userId: $token->user_id,
-            requestedScopes: $token->scopes,
-            tokenClient: Client::from($token->connection),
+            connectionAccessToken: $connectionAccessToken,
         );
     }
 }

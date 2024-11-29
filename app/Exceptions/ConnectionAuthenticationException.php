@@ -2,14 +2,14 @@
 
 namespace App\Exceptions;
 
-use App\Models\Provider;
+use App\Contracts\Connections\IdentityProvider;
 use Illuminate\Auth\AuthenticationException;
 
 class ConnectionAuthenticationException extends AuthenticationException
 {
-    public function __construct(Provider $provider)
+    public function __construct(IdentityProvider $identityProvider)
     {
-        static::redirectUsing(function () {});
+        static::redirectUsing(fn () => $identityProvider->setupAuthorizationRedirect());
 
         parent::__construct('Unauthenticated');
     }

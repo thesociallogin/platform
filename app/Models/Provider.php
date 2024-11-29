@@ -20,18 +20,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \App\Models\Enums\Provider $provider
  * @property mixed|null $client_id
  * @property mixed|null $client_secret
+ * @property string|null $authorization_endpoint
+ * @property string|null $token_endpoint
+ * @property string|null $userinfo_endpoint
+ * @property string|null $redirect_url
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Connection> $connections
  * @property-read int|null $connections_count
  * @property-read mixed $login_url
- * @property-read mixed $redirect_url
  * @property-read \App\Models\Team|null $team
  *
  * @method static \Database\Factories\ProviderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereAuthorizationEndpoint($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereClientId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereClientSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereCreatedAt($value)
@@ -39,9 +43,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereProvider($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereRedirectUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereTeamId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereTokenEndpoint($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUserinfoEndpoint($value)
  *
  * @mixin \Eloquent
  */
@@ -62,6 +69,10 @@ class Provider extends Model
         'provider',
         'client_id',
         'client_secret',
+        'authorization_endpoint',
+        'token_endpoint',
+        'userinfo_endpoint',
+        'redirect_url',
     ];
 
     /**
@@ -83,11 +94,6 @@ class Provider extends Model
         return Attribute::get(function ($value, $attributes = null) {
             return route('login.providers');
         });
-    }
-
-    public function redirectUrl(): Attribute
-    {
-        return Attribute::get(function ($value, $attributes = null) {});
     }
 
     /**

@@ -77,16 +77,16 @@ return [
                 'in' => 'header',
             ],
         ],
-        //'oauth' => [
-        //    'enabled' => true,
-        //    'type' => 'oauth2',
-        //    'flow' => 'authorizationCode',
-        //    'tokenUrl' => '',
-        //    'authorizationUrl' =>'',
-        //    'refreshUrl' => '',
-        //    'scopes' => ['scope1' => 'Description scope 1'],
-        //    'pkce' => true
-        //],
+        'oauth' => [
+            'enabled' => true,
+            'type' => 'oauth2',
+            'flow' => 'authorizationCode',
+            'tokenUrl' => env('APP_URL_ACCOUNT').'/token',
+            'authorizationUrl' => env('APP_URL_ACCOUNT').'/authorize',
+            'refreshUrl' => env('APP_URL_ACCOUNT').'/refresh',
+            'scopes' => [],
+            'pkce' => true,
+        ],
         //'license' => [
         //    'name' => 'Apache 2.0',
         //    'url' => 'https://www.apache.org/licenses/LICENSE-2.0.html',

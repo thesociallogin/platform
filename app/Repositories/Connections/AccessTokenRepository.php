@@ -14,9 +14,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null): AccessTokenEntityInterface
     {
         return AccessToken::from([
-            'userId' => $userIdentifier,
-            'requestedScopes' => $scopes,
-            'tokenClient' => $clientEntity,
+            'connectionAccessToken' => ConnectionAccessToken::make([
+                'connection_id' => $clientEntity->getIdentifier(),
+                'user_id' => $userIdentifier,
+                'scopes' => $scopes,
+            ]),
         ]);
     }
 
