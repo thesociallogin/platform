@@ -9,7 +9,6 @@ use App\Data\Connections\User;
 use App\Exceptions\ConnectionAuthenticationException;
 use App\Exceptions\ConnectionServerException;
 use App\Http\Controllers\Controller;
-use App\Models\ConnectionRequest;
 use App\Models\Provider;
 use App\Models\User as UserModel;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -21,7 +20,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AuthorizationController extends Controller
 {
-    use HandlesOAuthErrors;
+    use HandlesConnectionReturn;
+    use HandlesOAuthServerErrors;
+    use ValidatesOAuthRequest;
 
     public function __construct(
         protected ConnectionAuthorizationServerInterface $server,
@@ -45,20 +46,10 @@ class AuthorizationController extends Controller
         /** @var Client $client */
         $client = $authRequest->getClient();
 
-        if (blank($client->connection)) {
-            abort(401, 'We could not identify the connection making the request.');
-        }
-
-        if (! $client->connection->providers->contains($provider->getKey())) {
-            abort(401, 'The provider being requested is not assigned to the connection making the request.');
-        }
+        $this->validateConnection($client, $provider);
 
         if ($this->guard->guest()) {
-            $connectionRequest = ConnectionRequest::create([
-                'redirect_url' => $request->getRequestUri(),
-            ]);
-
-            $request->session()->put('connectionrequest', $connectionRequest->getKey());
+            $this->initConnectionReturn($request);
 
             return $this->promptForLogin($request);
         }

@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
 use App\Traits\BelongsToTeam;
 use App\Traits\BelongsToUser;
 use App\Traits\CanBeRevoked;

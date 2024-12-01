@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AccessTokenController extends Controller
 {
-    use HandlesOAuthErrors;
+    use HandlesOAuthServerErrors;
 
     public function __construct(
         protected ConnectionAuthorizationServerInterface $server,

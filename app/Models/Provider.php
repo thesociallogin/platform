@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Traits\BelongsToTeam;
 use Database\Factories\ProviderFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -23,7 +22,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string|null $authorization_endpoint
  * @property string|null $token_endpoint
  * @property string|null $userinfo_endpoint
+ * @property string|null $userinfo_id
+ * @property string|null $userinfo_name
+ * @property string|null $userinfo_email
  * @property string|null $redirect_url
+ * @property array|null $scopes
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Connection> $connections
@@ -44,15 +47,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereProvider($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereRedirectUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereScopes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereTeamId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereTokenEndpoint($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUserinfoEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUserinfoEndpoint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUserinfoId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUserinfoName($value)
  *
  * @mixin \Eloquent
  */
-#[ApiResource]
 class Provider extends Model
 {
     /** @use HasFactory<ProviderFactory> */
@@ -72,7 +78,11 @@ class Provider extends Model
         'authorization_endpoint',
         'token_endpoint',
         'userinfo_endpoint',
+        'userinfo_id',
+        'userinfo_name',
+        'userinfo_email',
         'redirect_url',
+        'scopes',
     ];
 
     /**
@@ -106,6 +116,7 @@ class Provider extends Model
             'provider' => Enums\Provider::class,
             'client_id' => 'encrypted',
             'client_secret' => 'encrypted',
+            'scopes' => 'array',
         ];
     }
 }

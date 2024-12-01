@@ -24,6 +24,7 @@ use Laravel\Passport\Client;
  * @property-read \App\Models\Team|null $team
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PassportToken> $tokens
  * @property-read int|null $tokens_count
+ * @property-read \App\Models\User|null $user
  *
  * @method static \Laravel\Passport\Database\Factories\ClientFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PassportClient newModelQuery()

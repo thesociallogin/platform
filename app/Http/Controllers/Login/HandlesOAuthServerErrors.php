@@ -9,7 +9,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use Nyholm\Psr7\Response as Psr7Response;
 use Psr\Http\Message\ResponseInterface;
 
-trait HandlesOAuthErrors
+trait HandlesOAuthServerErrors
 {
     /**
      * @throws ConnectionServerException

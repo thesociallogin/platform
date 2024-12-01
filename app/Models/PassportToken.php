@@ -19,6 +19,7 @@ use Laravel\Passport\Token;
  * @property-read \App\Models\PassportClient|null $client
  * @property-read \Laravel\Passport\RefreshToken|null $refreshToken
  * @property-read \App\Models\Team|null $team
+ * @property-read \App\Models\User|null $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PassportToken newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PassportToken newQuery()

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Contracts\Claimable;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -53,7 +52,6 @@ use Laravel\Passport\HasApiTokens;
  *
  * @mixin \Eloquent
  */
-#[ApiResource]
 class User extends Authenticatable implements Claimable, FilamentUser, HasAvatar, HasName, HasTenants, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */

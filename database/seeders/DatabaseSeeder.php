@@ -54,7 +54,12 @@ class DatabaseSeeder extends Seeder
             'client_secret' => $client->plainSecret,
             'authorization_endpoint' => route('passport.authorizations.authorize'),
             'token_endpoint' => route('passport.token'),
+            'userinfo_endpoint' => route('api.me'),
+            'userinfo_id' => 'data.id',
+            'userinfo_name' => 'data.name',
+            'userinfo_email' => 'data.email',
             'redirect_url' => $redirectUrl,
+            'scopes' => ['openid', 'profile', 'email'],
         ])->save();
     }
 }

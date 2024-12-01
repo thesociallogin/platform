@@ -6,6 +6,7 @@ use App\Models\PassportClient;
 use App\Models\PassportToken;
 use Filament\Forms\Components\Field;
 use Filament\Infolists\Components\Entry;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -15,7 +16,14 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        App::bind('orion.authorizationRequired', fn () => false);
+
         Passport::ignoreRoutes();
+        Passport::tokensCan([
+            'openid' => 'Can log your account in',
+            'profile' => 'Can access your profile',
+            'email' => 'Can access your email',
+        ]);
     }
 
     public function boot(): void

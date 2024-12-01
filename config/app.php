@@ -56,6 +56,7 @@ return [
     'platform_url' => env('APP_URL_PLATFORM', 'https://platform.thesociallogin.test'),
     'account_url' => env('APP_URL_ACCOUNT', 'https://account.thesociallogin.test'),
     'login_url' => env('APP_URL_LOGIN', 'https://login.thesociallogin.test'),
+    'api_url' => env('APP_URL_API', 'https://api.thesociallogin.test'),
 
     /*
     |--------------------------------------------------------------------------
