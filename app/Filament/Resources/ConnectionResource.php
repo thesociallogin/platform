@@ -3,9 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ConnectionResource\Pages;
+use App\Filament\Resources\ConnectionResource\RelationManagers\LogsRelationManager;
 use App\Models\Connection;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -30,6 +33,10 @@ class ConnectionResource extends Resource
                                     ->helperText('The name of the connection. This should be something easily recognizable such as the name of the app or website you are connecting.')
                                     ->required()
                                     ->maxLength(255),
+                                Forms\Components\RichEditor::make('description')
+                                    ->helperText('An optional description of the connection. This will be displayed in the users main account dashboard.')
+                                    ->nullable()
+                                    ->maxLength(65535),
                                 Forms\Components\CheckboxList::make('providers')
                                     ->hintAction(Forms\Components\Actions\Action::make('create')
                                         ->url(ProviderResource::getUrl('create'))
@@ -50,6 +57,25 @@ class ConnectionResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            Infolists\Components\Tabs::make()
+                ->columnSpanFull()
+                ->tabs([
+                    Infolists\Components\Tabs\Tab::make('Details')
+                        ->icon('heroicon-o-information-circle')
+                        ->schema([
+                            Infolists\Components\TextEntry::make('name'),
+                            Infolists\Components\TextEntry::make('description')
+                                ->html(),
+                            Infolists\Components\TextEntry::make('providers.name')
+                                ->badge(),
+                        ]),
+                ]),
+        ]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -63,10 +89,17 @@ class ConnectionResource extends Resource
                     ->sortable()
                     ->copyable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->sortable()
+                    ->searchable()
+                    ->html()
+                    ->wrap()
+                    ->limit(),
             ])
             ->filters([
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -80,7 +113,7 @@ class ConnectionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            LogsRelationManager::make(),
         ];
     }
 
@@ -90,6 +123,7 @@ class ConnectionResource extends Resource
             'index' => Pages\ListConnections::route('/'),
             'create' => Pages\CreateConnection::route('/create'),
             'edit' => Pages\EditConnection::route('/{record}/edit'),
+            'view' => Pages\ViewConnection::route('/{record}'),
         ];
     }
 }

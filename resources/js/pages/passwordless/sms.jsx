@@ -4,17 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.j
 import { Input } from '@/components/ui/input.jsx'
 import { useForm } from '@inertiajs/react'
 
-export default function Login({ provider, loginUri, flash }) {
+export default function Email({ provider, flash }) {
   const { data, setData, post, processing, errors, clearErrors, reset } = useForm({
-    code: ''
+    phone: ''
   })
 
   function submit(e) {
     e.preventDefault()
     clearErrors()
-    post(loginUri, {
+    post(`/${provider}/passwordless/sms`, {
       preserveScroll: true,
-      onSuccess: () => reset('code')
+      onSuccess: () => reset('phone')
     })
   }
 
@@ -27,21 +27,21 @@ export default function Login({ provider, loginUri, flash }) {
           </CardHeader>
           <CardContent className='flex justify-center'>
             <div className='flex flex-col space-y-4'>
-              <div className='text-sm text-gray-500'>Enter the one time code you received to login.</div>
+              <div className='text-sm text-gray-500'>Enter your phone number to receive a one-time code to login.</div>
               {flash.message && <div className='text-wrap text-sm text-green-600'>{flash.message}</div>}
               <form onSubmit={submit} className='flex flex-col space-y-4'>
                 <div>
                   <Input
                     type='text'
                     autofocus
-                    autocomplete='one-time-code'
-                    value={data.code}
-                    onChange={(e) => setData('code', e.target.value)}
-                    placeholder='Code'
+                    autocomplete='phone_number'
+                    value={data.email}
+                    onChange={(e) => setData('phone', e.target.value)}
+                    placeholder='Phone Number'
                   />
-                  {errors.code && <div className='mt-1 text-sm text-red-600'>{errors.code}</div>}
+                  {errors.phone && <div className='mt-1 text-sm text-red-600'>{errors.phone}</div>}
                 </div>
-                <Button disabled={processing}>Login</Button>
+                <Button disabled={processing}>Send Code</Button>
               </form>
             </div>
           </CardContent>

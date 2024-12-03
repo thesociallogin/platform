@@ -9,6 +9,7 @@ use App\Data\Connections\User;
 use App\Exceptions\ConnectionAuthenticationException;
 use App\Exceptions\ConnectionServerException;
 use App\Http\Controllers\Controller;
+use App\Models\ConnectionLog;
 use App\Models\Provider;
 use App\Models\User as UserModel;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -56,6 +57,13 @@ class AuthorizationController extends Controller
 
         /** @var UserModel $user */
         $user = $this->guard->user();
+
+        ConnectionLog::create([
+            'user_id' => $user->getKey(),
+            'connection_id' => $client->getIdentifier(),
+            'provider_id' => $provider->getKey(),
+            'ip' => $request->ip(),
+        ]);
 
         return $this->approveRequest($authRequest, $user);
     }

@@ -1,10 +1,10 @@
 <x-mail::message>
-# Your One Time Code
+  # Your One Time Code
 
-Please use the following code to login.
+  Please use the following code to login.
 
-**{{ $code }}**
+  **{{ $code }}**
 
-Thanks,<br>
-{{ config('app.name') }}
+  Thanks,<br>
+  {{ config('app.name') }}
 </x-mail::message>

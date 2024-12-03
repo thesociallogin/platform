@@ -42,7 +42,7 @@ class SendController implements HasMiddleware
             path: URL::signedRoute('login.passwordless.login.index', [
                 'provider' => $provider,
             ])
-        )->with('status', __('If you have an account with us, we have sent an email to the address provided.'));
+        )->with('status', __('If you have an account with us, we have sent a text message to the phone number provided.'));
     }
 
     /**

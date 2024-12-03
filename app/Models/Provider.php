@@ -121,7 +121,7 @@ class Provider extends Model
 
     public function type(): Attribute
     {
-        return Attribute::get(function ($value, $attributes = null) {
+        return Attribute::get(function ($value, $attributes = null): ?ProviderType {
             $provider = Enums\Provider::from(data_get($attributes, 'provider'));
 
             return match (true) {
@@ -138,7 +138,6 @@ class Provider extends Model
     public function casts(): array
     {
         return [
-            'type' => Enums\ProviderType::class,
             'provider' => Enums\Provider::class,
             'client_id' => 'encrypted',
             'client_secret' => 'encrypted',

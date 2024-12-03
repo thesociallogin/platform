@@ -5,6 +5,7 @@ namespace App\Models\Enums;
 use App\Providers\Identity\Google;
 use App\Providers\Identity\OAuth2;
 use App\Providers\Identity\PasswordlessEmail;
+use App\Providers\Identity\PasswordlessSms;
 use Filament\Support\Contracts\HasLabel;
 
 enum Provider: string implements HasLabel
@@ -31,7 +32,8 @@ enum Provider: string implements HasLabel
         return match ($this) {
             Provider::GOOGLE => Google::class,
             Provider::OAUTH2 => OAuth2::class,
-            Provider::EMAIL => PasswordlessEmail::class
+            Provider::EMAIL => PasswordlessEmail::class,
+            Provider::SMS => PasswordlessSms::class,
         };
     }
 }
