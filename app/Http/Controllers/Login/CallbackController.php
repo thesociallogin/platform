@@ -40,12 +40,12 @@ class CallbackController extends Controller
         /** @var IdentityResourceOwnerInterface $resourceOwner */
         $resourceOwner = $this->identityProvider->getResourceOwner($accessToken);
 
-        $this->createOrUpdateUser($resourceOwner, function (User $user) {
+        $this->createOrUpdateUser($resourceOwner, $provider, function (User $user) {
             Auth::loginUsingId($user->getAuthIdentifier());
         });
 
         if ($redirect = $this->handleConnectionReturn($request)) {
-            return $redirect;
+            return redirect($redirect);
         }
 
         return redirect(Dashboard::getUrl(panel: 'account'));

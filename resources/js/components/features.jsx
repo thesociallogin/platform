@@ -1,7 +1,7 @@
 import appScreenshot from '@/../images/app.png'
 import { Container } from '@/components/container.jsx'
 import { Screenshot } from '@/components/screenshot.jsx'
-import {Heading, Subheading} from '@/components/text.jsx'
+import { Heading, Subheading } from '@/components/text.jsx'
 
 export default function Features() {
   return (

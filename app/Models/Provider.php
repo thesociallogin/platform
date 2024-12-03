@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enums\ProviderType;
 use App\Traits\BelongsToTeam;
 use Database\Factories\ProviderFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -9,13 +10,13 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use League\OAuth2\Client\Provider\AbstractProvider;
 
 /**
  * @property string $id
  * @property string|null $team_id
  * @property string $name
  * @property string|null $display_name
- * @property \App\Models\Enums\ProviderType $type
  * @property \App\Models\Enums\Provider $provider
  * @property mixed|null $client_id
  * @property mixed|null $client_secret
@@ -25,14 +26,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string|null $userinfo_id
  * @property string|null $userinfo_name
  * @property string|null $userinfo_email
- * @property string|null $redirect_url
  * @property array|null $scopes
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property ProviderType $type
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Connection> $connections
  * @property-read int|null $connections_count
- * @property-read mixed $login_url
+ * @property-read mixed $redirect_url
  * @property-read \App\Models\Team|null $team
+ * @property-read \App\Models\UserLink|null $pivot
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
  *
  * @method static \Database\Factories\ProviderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider newModelQuery()
@@ -46,11 +50,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereProvider($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereRedirectUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereScopes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereTeamId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereTokenEndpoint($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUserinfoEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Provider whereUserinfoEndpoint($value)
@@ -81,16 +83,14 @@ class Provider extends Model
         'userinfo_id',
         'userinfo_name',
         'userinfo_email',
-        'redirect_url',
         'scopes',
     ];
 
     /**
      * @var string[]
      */
-    protected $hidden = [
-        'client_id',
-        'client_secret',
+    protected $appends = [
+        'type',
     ];
 
     public function connections(): BelongsToMany
@@ -99,11 +99,37 @@ class Provider extends Model
             ->withTimestamps();
     }
 
-    public function loginUrl(): Attribute
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'users_links')
+            ->withTimestamps()
+            ->using(UserLink::class);
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::get(fn ($value, $attributes = null) => data_get($attributes, 'display_name') ?? data_get($attributes, 'name'))
+            ->shouldCache();
+    }
+
+    public function redirectUrl(): Attribute
+    {
+        return Attribute::get(fn () => route('login.callback', [
+            'provider' => $this,
+        ]))->shouldCache();
+    }
+
+    public function type(): Attribute
     {
         return Attribute::get(function ($value, $attributes = null) {
-            return route('login.providers');
-        });
+            $provider = Enums\Provider::from(data_get($attributes, 'provider'));
+
+            return match (true) {
+                $provider === Enums\Provider::EMAIL, $provider === Enums\Provider::SMS => ProviderType::PASSWORDLESS,
+                is_subclass_of($provider, AbstractProvider::class) => ProviderType::OAUTH,
+                default => null
+            };
+        })->shouldCache();
     }
 
     /**

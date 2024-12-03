@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Login;
 
 use App\Models\ConnectionRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 trait HandlesConnectionReturn
@@ -20,7 +19,7 @@ trait HandlesConnectionReturn
         return $connectionRequest;
     }
 
-    protected function handleConnectionReturn(Request $request): ?RedirectResponse
+    protected function handleConnectionReturn(Request $request): ?string
     {
         if (! $request->session()->has('connectionrequest')) {
             return null;
@@ -33,6 +32,6 @@ trait HandlesConnectionReturn
 
         $request->session()->forget('connectionrequest');
 
-        return redirect($connectionRequest->redirect_url);
+        return $connectionRequest->redirect_url;
     }
 }

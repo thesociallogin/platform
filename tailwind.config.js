@@ -1,5 +1,3 @@
-import defaultTheme from 'tailwindcss/defaultTheme'
-
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'],
@@ -12,13 +10,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: 'Inter, system-ui, sans-serif',
+        sans: 'Inter, system-ui, sans-serif'
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
-        '4xl': '2rem',
+        '4xl': '2rem'
       },
       colors: {
         background: 'hsl(var(--background))',

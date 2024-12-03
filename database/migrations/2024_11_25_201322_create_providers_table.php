@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignIdFor(Team::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('display_name')->nullable();
-            $table->string('type');
             $table->string('provider');
             $table->mediumText('client_id')->nullable();
             $table->mediumText('client_secret')->nullable();
@@ -27,7 +26,6 @@ return new class extends Migration
             $table->string('userinfo_id')->nullable();
             $table->string('userinfo_name')->nullable();
             $table->string('userinfo_email')->nullable();
-            $table->mediumText('redirect_url')->nullable();
             $table->json('scopes')->nullable();
             $table->timestamps();
         });

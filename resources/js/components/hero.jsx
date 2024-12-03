@@ -8,7 +8,7 @@ import { ChevronRightIcon } from '@heroicons/react/16/solid'
 export default function Hero() {
   return (
     <div className='relative'>
-      <Gradient className='rounded-4xl absolute inset-2 bottom-0 ring-1 ring-inset ring-black/5' />
+      <Gradient className='absolute inset-2 bottom-0 rounded-4xl ring-1 ring-inset ring-black/5' />
       <Container className='relative'>
         <Navbar
           banner={

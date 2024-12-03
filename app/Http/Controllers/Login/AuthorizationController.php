@@ -60,6 +60,9 @@ class AuthorizationController extends Controller
         return $this->approveRequest($authRequest, $user);
     }
 
+    /**
+     * @throws ConnectionServerException
+     */
     protected function approveRequest(AuthorizationRequest $authRequest, UserModel $user): Response
     {
         $authRequest->setUser(User::from($user));

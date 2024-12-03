@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Connection;
-use App\Models\Enums\ProviderType;
 use App\Models\Provider;
 use App\Models\Team;
 use App\Models\User;
@@ -27,29 +26,29 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@deschutesdesigngroup.com',
         ]))->create();
 
-        $provider = Provider::factory()->state([
-            'id' => '9d999856-44ed-4ece-8c4a-a4c3a6cc3580',
-            'name' => 'Provider 1',
-            'type' => ProviderType::OAUTH,
-            'provider' => \App\Models\Enums\Provider::OAUTH2,
-            'team_id' => $team->getKey(),
-        ])->has(Connection::factory()->forPostman()->state([
+        $connection = Connection::factory()->forPostman()->state([
             'id' => '9d999856-4664-4cf3-8df8-a7b408a42a73',
             'name' => 'Connection 1',
             'team_id' => $team->getKey(),
-        ]), 'connections')->create();
+        ])->create();
+
+        $oAuthProvider = Provider::factory()->state([
+            'id' => '9d999856-44ed-4ece-8c4a-a4c3a6cc3580',
+            'name' => 'Test OAuth 2.0 Provider',
+            'provider' => \App\Models\Enums\Provider::OAUTH2,
+            'team_id' => $team->getKey(),
+        ])->create();
+        $oAuthProvider->connections()->attach($connection);
 
         /** @var ClientRepository $client */
         $clientRepository = app()->make(ClientRepository::class);
         $client = $clientRepository->create(
             userId: null,
             name: 'Test OAuth Provider',
-            redirect: $redirectUrl = route('login.callback', [
-                'provider' => $provider,
-            ]),
+            redirect: $oAuthProvider->redirect_url,
         );
 
-        $provider->forceFill([
+        $oAuthProvider->forceFill([
             'client_id' => $client->getKey(),
             'client_secret' => $client->plainSecret,
             'authorization_endpoint' => route('passport.authorizations.authorize'),
@@ -58,8 +57,23 @@ class DatabaseSeeder extends Seeder
             'userinfo_id' => 'data.id',
             'userinfo_name' => 'data.name',
             'userinfo_email' => 'data.email',
-            'redirect_url' => $redirectUrl,
             'scopes' => ['openid', 'profile', 'email'],
         ])->save();
+
+        $passwordlessEmailProvider = Provider::factory()->state([
+            'id' => '9d999856-44ed-4ece-8c4a-a4c3a6cc3581',
+            'name' => 'Test Passwordless Email Provider',
+            'provider' => \App\Models\Enums\Provider::EMAIL,
+            'team_id' => $team->getKey(),
+        ])->create();
+        $passwordlessEmailProvider->connections()->attach($connection);
+
+        $passwordlessSmsProvider = Provider::factory()->state([
+            'id' => '9d999856-44ed-4ece-8c4a-a4c3a6cc3582',
+            'name' => 'Test Passwordless SMS Provider',
+            'provider' => \App\Models\Enums\Provider::SMS,
+            'team_id' => $team->getKey(),
+        ])->create();
+        $passwordlessSmsProvider->connections()->attach($connection);
     }
 }

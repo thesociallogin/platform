@@ -10,7 +10,7 @@ class ListConnections extends ListRecords
 {
     protected static string $resource = ConnectionResource::class;
 
-    protected ?string $subheading = 'Connections are used to establish a pathway between your software and The Social Login.';
+    protected ?string $subheading = 'Connections are used to establish a login pathway between your app and The Social Login.';
 
     protected function getHeaderActions(): array
     {

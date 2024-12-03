@@ -78,19 +78,24 @@ class OAuth2ResourceOwner implements IdentityResourceOwnerInterface
 
     public function __construct(protected Provider $provider, protected array $response) {}
 
-    public function getId()
+    public function getId(): string
     {
         return $this->getValueByKey($this->response, $this->provider->userinfo_id);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->getValueByKey($this->response, $this->provider->userinfo_name);
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->getValueByKey($this->response, $this->provider->userinfo_email);
+    }
+
+    public function getProvider(): Provider
+    {
+        return $this->provider;
     }
 
     public function toArray(): array

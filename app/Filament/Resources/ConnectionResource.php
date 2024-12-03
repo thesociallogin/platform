@@ -55,13 +55,13 @@ class ConnectionResource extends Resource
         return $table
             ->emptyStateDescription('Add your first connection to start using The Social Login.')
             ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
                     ->copyable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->sortable()
                     ->searchable(),
             ])
             ->filters([

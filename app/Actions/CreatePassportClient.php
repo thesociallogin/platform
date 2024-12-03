@@ -22,7 +22,10 @@ class CreatePassportClient
         );
 
         $client->team()->associate($connection->team)->save();
-        $connection->client()->associate($client)->save();
+
+        $client->forceFill([
+            'connection_id' => $connection->getKey(),
+        ])->save();
 
         return $client;
     }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignUuid('team_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignUuid('connection_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('secret', 100)->nullable();
             $table->string('provider')->nullable();

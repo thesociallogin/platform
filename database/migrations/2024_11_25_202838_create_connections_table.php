@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignUuid('team_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
+            $table->mediumText('description')->nullable();
             $table->text('secret')->nullable();
             $table->json('scopes')->nullable();
             $table->string('redirect_url');

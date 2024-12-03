@@ -15,7 +15,6 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AccountPanelProvider extends PanelProvider
@@ -25,11 +24,11 @@ class AccountPanelProvider extends PanelProvider
         return $panel
             ->id('account')
             ->domain(config('app.account_url'))
-            ->brandName(fn () => Auth::user()?->teams->first()->name ?? config('app.name'))
             ->login()
             ->registration()
             ->passwordReset()
             ->emailVerification()
+            ->profile()
             ->colors([
                 'primary' => Color::Blue,
             ])

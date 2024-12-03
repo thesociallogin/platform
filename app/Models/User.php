@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -24,14 +25,20 @@ use Laravel\Passport\HasApiTokens;
  * @property string $name
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property string $password
+ * @property string|null $password
  * @property string|null $remember_token
+ * @property array|null $claims
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PassportClient> $clients
  * @property-read int|null $clients_count
+ * @property-read \App\Models\UserLink|null $pivot
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Provider> $links
+ * @property-read int|null $links_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OneTimeCode> $oneTimeCodes
+ * @property-read int|null $one_time_codes_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Team> $teams
  * @property-read int|null $teams_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PassportToken> $tokens
@@ -41,6 +48,7 @@ use Laravel\Passport\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereClaims($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmailVerifiedAt($value)
@@ -64,6 +72,7 @@ class User extends Authenticatable implements Claimable, FilamentUser, HasAvatar
         'name',
         'email',
         'password',
+        'claims',
     ];
 
     /**
@@ -82,6 +91,7 @@ class User extends Authenticatable implements Claimable, FilamentUser, HasAvatar
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'claims' => 'array',
         ];
     }
 
@@ -99,6 +109,18 @@ class User extends Authenticatable implements Claimable, FilamentUser, HasAvatar
     public function getTenants(Panel $panel): array|Collection
     {
         return $this->teams;
+    }
+
+    public function links(): BelongsToMany
+    {
+        return $this->belongsToMany(Provider::class, 'users_links')
+            ->withTimestamps()
+            ->using(UserLink::class);
+    }
+
+    public function oneTimeCodes(): HasMany
+    {
+        return $this->hasMany(OneTimeCode::class);
     }
 
     public function teams(): BelongsToMany
@@ -122,13 +144,13 @@ class User extends Authenticatable implements Claimable, FilamentUser, HasAvatar
      */
     public function getClaims(): array
     {
-        return [
+        return array_merge($this->claims ?? [], [
             'name' => $this->name,
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at
                 ? $this->email_verified_at->getTimestamp()
                 : null,
             'picture' => null,
-        ];
+        ]);
     }
 }
