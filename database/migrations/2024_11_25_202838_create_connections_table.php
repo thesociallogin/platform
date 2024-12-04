@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('secret')->nullable();
             $table->json('scopes')->nullable();
             $table->string('redirect_url');
+            $table->boolean('private')->default(false);
             $table->boolean('revoked')->default(false);
             $table->timestamps();
         });

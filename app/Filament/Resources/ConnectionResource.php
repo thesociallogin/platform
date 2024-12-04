@@ -21,6 +21,48 @@ class ConnectionResource extends Resource
 
     public static function form(Form $form): Form
     {
+        if ($form->getOperation() === 'create') {
+            return $form->schema([
+                Forms\Components\Wizard::make()
+                    ->columnSpanFull()
+                    ->steps([
+                        Forms\Components\Wizard\Step::make('Details')
+                            ->schema([
+                                Forms\Components\Placeholder::make('')
+                                    ->content(__('Input some of the connection\'s basic information.')),
+                                Forms\Components\TextInput::make('name')
+                                    ->helperText('The name of the connection. This should be something easily recognizable such as the name of the app or website you are connecting.')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\RichEditor::make('description')
+                                    ->helperText('An optional description of the connection. This will be displayed in the users main account dashboard.')
+                                    ->nullable()
+                                    ->maxLength(65535),
+                            ]),
+                        Forms\Components\Wizard\Step::make('Redirect')
+                            ->schema([
+                                Forms\Components\Placeholder::make('')
+                                    ->content(__('Where will the user be redirected after they successfully complete authentication? If you are using a The Social Login support plugin/integration, the URL will be located in the plugin/integration settings.')),
+                                Forms\Components\TextInput::make('redirect_url')
+                                    ->url()
+                                    ->label('Redirect URL')
+                                    ->helperText('The URL the user will be redirected to after completing authentication.')
+                                    ->required()
+                                    ->maxLength(255),
+                            ]),
+                        Forms\Components\Wizard\Step::make('Providers')
+                            ->schema([
+                                Forms\Components\Placeholder::make('')
+                                    ->content(__('Choose the identity providers the user will be allowed to sign in to this connection with.')),
+                                Forms\Components\CheckboxList::make('providers')
+                                    ->hiddenLabel()
+                                    ->helperText('The identity providers that users will be allowed to authenticate with.')
+                                    ->relationship('providers', titleAttribute: 'name'),
+                            ]),
+                    ]),
+            ]);
+        }
+
         return $form
             ->schema([
                 Forms\Components\Tabs::make()
@@ -45,11 +87,13 @@ class ConnectionResource extends Resource
                                     ->helperText('The identity providers that users will be allowed to authenticate with.')
                                     ->relationship('providers', titleAttribute: 'name'),
                                 Forms\Components\TextInput::make('redirect_url')
+                                    ->url()
                                     ->label('Redirect URL')
                                     ->helperText('The URL the user will be redirected to after completing authentication. If you installed a client plugin/library, check the settings for the correct URL.')
                                     ->required()
                                     ->maxLength(255),
                                 Forms\Components\Toggle::make('private')
+                                    ->visibleOn('create')
                                     ->default(false)
                                     ->helperText('Is this connection used by the public? Set to private if this connection is used for internal purposes only. If private, we will generate one-time private login URLs instead of publicly accessible URLs.'),
                             ]),
@@ -66,11 +110,16 @@ class ConnectionResource extends Resource
                     Infolists\Components\Tabs\Tab::make('Details')
                         ->icon('heroicon-o-information-circle')
                         ->schema([
-                            Infolists\Components\TextEntry::make('name'),
-                            Infolists\Components\TextEntry::make('description')
-                                ->html(),
+                            Infolists\Components\TextEntry::make('id')
+                                ->label('ID')
+                                ->copyable(),
+                            Infolists\Components\TextEntry::make('secret')
+                                ->copyable(),
                             Infolists\Components\TextEntry::make('providers.name')
                                 ->badge(),
+                            Infolists\Components\TextEntry::make('redirect_url')
+                                ->label('Redirect URL')
+                                ->copyable(),
                         ]),
                 ]),
         ]);

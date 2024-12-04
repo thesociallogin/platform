@@ -26,10 +26,13 @@ use Illuminate\Support\Str;
  * @property mixed|null $secret
  * @property array|null $scopes
  * @property string $redirect_url
+ * @property int $private
  * @property bool $revoked
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\PassportClient|null $client
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ConnectionLog> $logs
+ * @property-read int|null $logs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Provider> $providers
  * @property-read int|null $providers_count
  * @property-read mixed $sso_url
@@ -46,6 +49,7 @@ use Illuminate\Support\Str;
  * @method static Builder<static>|Connection whereDescription($value)
  * @method static Builder<static>|Connection whereId($value)
  * @method static Builder<static>|Connection whereName($value)
+ * @method static Builder<static>|Connection wherePrivate($value)
  * @method static Builder<static>|Connection whereRedirectUrl($value)
  * @method static Builder<static>|Connection whereRevoked($value)
  * @method static Builder<static>|Connection whereScopes($value)
@@ -72,6 +76,7 @@ class Connection extends Model
         'redirect_url',
         'secret',
         'scopes',
+        'private',
         'revoked',
     ];
 

@@ -1,25 +1,21 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { Bars2Icon } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
+import { useRoute } from 'ziggy-js'
 import { Link } from './link'
 import { Logo } from './logo'
 import { PlusGrid, PlusGridItem, PlusGridRow } from './plus-grid'
 
-const links = [
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/company', label: 'Company' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/login', label: 'Login' }
-]
-
-function DesktopNav() {
+function DesktopNav({ links }) {
   return (
     <nav className='relative hidden lg:flex'>
-      {links.map(({ href, label }) => (
-        <PlusGridItem key={href} className='relative flex'>
+      {links.map(({ href, label, newTab }) => (
+        <PlusGridItem key={label} className='relative flex'>
           <Link
+            key={label}
             href={href}
             className='flex items-center px-4 py-3 text-base font-medium text-zinc-100 bg-blend-multiply data-[hover]:bg-white/[2.5%]'
+            {...(newTab ? { target: '__blank' } : {})}
           >
             {label}
           </Link>
@@ -40,11 +36,11 @@ function MobileNavButton() {
   )
 }
 
-function MobileNav() {
+function MobileNav({ links }) {
   return (
     <DisclosurePanel className='lg:hidden'>
       <div className='flex flex-col gap-6 py-4'>
-        {links.map(({ href, label }, linkIndex) => (
+        {links.map(({ href, label, newTab }, linkIndex) => (
           <motion.div
             initial={{ opacity: 0, rotateX: -90 }}
             animate={{ opacity: 1, rotateX: 0 }}
@@ -55,7 +51,7 @@ function MobileNav() {
             }}
             key={href}
           >
-            <Link href={href} className='text-base font-medium text-gray-950'>
+            <Link href={href} {...(newTab ? { target: '__blank' } : {})} className='text-base font-medium text-zinc-950'>
               {label}
             </Link>
           </motion.div>
@@ -70,6 +66,14 @@ function MobileNav() {
 }
 
 export function Navbar({ banner }) {
+  const route = useRoute()
+
+  const links = [
+    { href: route('web.home') + '#features', label: 'Features' },
+    { href: route('web.home') + '#developers', label: 'Developers' },
+    { href: route('filament.platform.tenant'), label: 'Login', newTab: true }
+  ]
+
   return (
     <Disclosure as='header' className='pt-12 sm:pt-16'>
       <PlusGrid>
@@ -82,11 +86,11 @@ export function Navbar({ banner }) {
             </PlusGridItem>
             {banner && <div className='relative hidden items-center py-3 lg:flex'>{banner}</div>}
           </div>
-          <DesktopNav />
+          <DesktopNav links={links} />
           <MobileNavButton />
         </PlusGridRow>
       </PlusGrid>
-      <MobileNav />
+      <MobileNav links={links} />
     </Disclosure>
   )
 }

@@ -21,7 +21,8 @@
     "spatie/laravel-data": "^4.11",
     "spatie/laravel-google-fonts": "^1.4",
     "spatie/url": "^2.4",
-    "tailflow/laravel-orion": "^2.23"
+    "tailflow/laravel-orion": "^2.23",
+    "tightenco/ziggy": "^2.4"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^3.2",

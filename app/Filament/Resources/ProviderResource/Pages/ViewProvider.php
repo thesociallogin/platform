@@ -8,10 +8,21 @@ use App\Models\Provider;
 use App\Services\ProviderService;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ViewProvider extends ViewRecord
 {
     protected static string $resource = ProviderResource::class;
+
+    public function getHeading(): string|Htmlable
+    {
+        return $this->record->name ?? parent::getHeading();
+    }
+
+    public function getSubheading(): string|Htmlable|null
+    {
+        return $this->record->client_id ?? parent::getSubheading();
+    }
 
     protected function getHeaderActions(): array
     {

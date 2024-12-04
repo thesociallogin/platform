@@ -14,7 +14,8 @@ class LogsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('ip')
-            ->emptyStateDescription('Initiate a connection request to view your first log.')
+            ->emptyStateDescription(__('Initiate a connection request to view your first log.'))
+            ->description(__('All recent connection requests.'))
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->sortable(),

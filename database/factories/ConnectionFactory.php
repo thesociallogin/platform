@@ -25,6 +25,7 @@ class ConnectionFactory extends Factory
             'secret' => Str::random(40),
             'scopes' => collect(ConnectionService::$scopes)->keys()->toArray(),
             'redirect_url' => $this->faker->url,
+            'private' => true,
         ];
     }
 

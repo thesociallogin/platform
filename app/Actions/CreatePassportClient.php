@@ -18,7 +18,8 @@ class CreatePassportClient
         $client = $clientRepository->create(
             userId: null,
             name: $connection->name,
-            redirect: $connection->redirect_url
+            redirect: $connection->redirect_url,
+            confidential: $connection->private
         );
 
         $client->team()->associate($connection->team)->save();

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use League\OAuth2\Client\Provider\AbstractProvider;
 
 /**
  * @property string $id
@@ -29,11 +28,11 @@ use League\OAuth2\Client\Provider\AbstractProvider;
  * @property array|null $scopes
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property ProviderType $type
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Connection> $connections
  * @property-read int|null $connections_count
  * @property-read mixed $redirect_url
  * @property-read \App\Models\Team|null $team
+ * @property-read \App\Models\Enums\ProviderType|null $type
  * @property-read \App\Models\UserLink|null $pivot
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
@@ -122,13 +121,7 @@ class Provider extends Model
     public function type(): Attribute
     {
         return Attribute::get(function ($value, $attributes = null): ?ProviderType {
-            $provider = Enums\Provider::from(data_get($attributes, 'provider'));
-
-            return match (true) {
-                $provider === Enums\Provider::EMAIL, $provider === Enums\Provider::SMS => ProviderType::PASSWORDLESS,
-                is_subclass_of($provider, AbstractProvider::class) => ProviderType::OAUTH,
-                default => null
-            };
+            return Enums\Provider::from(data_get($attributes, 'provider'))->getType();
         })->shouldCache();
     }
 

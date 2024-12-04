@@ -10,10 +10,8 @@ use Filament\Forms\Form;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
-use League\OAuth2\Client\Provider\AbstractProvider;
 
 class ProviderResource extends Resource
 {
@@ -27,18 +25,24 @@ class ProviderResource extends Resource
             return $form
                 ->schema([
                     Forms\Components\Wizard::make()
+                        ->persistStepInQueryString()
+                        ->skippable()
                         ->columnSpanFull()
                         ->steps([
                             Forms\Components\Wizard\Step::make('Setup')
+                                ->live()
                                 ->icon('heroicon-o-wrench-screwdriver')
                                 ->schema([
                                     Forms\Components\TextInput::make('name')
+                                        ->helperText('The name of the provider.')
                                         ->required()
                                         ->maxLength(255),
                                     Forms\Components\TextInput::make('display_name')
+                                        ->helperText('An optional name for the provider that will be displayed to end users.')
                                         ->nullable()
                                         ->maxLength(255),
                                     Forms\Components\Select::make('provider')
+                                        ->helperText('Choose from a preconfigured list or providers or implement your own custom provider.')
                                         ->live()
                                         ->options(\App\Models\Enums\Provider::class)
                                         ->searchable()
@@ -46,12 +50,13 @@ class ProviderResource extends Resource
                                         ->required(),
                                 ]),
                             Forms\Components\Wizard\Step::make('Credentials')
+                                ->live()
                                 ->icon('heroicon-o-key')
                                 ->visible(function (Forms\Get $get) {
                                     if ($provider = $get('provider')) {
                                         $provider = \App\Models\Enums\Provider::from($provider);
 
-                                        return is_subclass_of($provider->getProvider(), AbstractProvider::class);
+                                        return in_array($provider->getType(), [ProviderType::OIDC, ProviderType::OAUTH]);
                                     }
 
                                     return false;
@@ -59,20 +64,48 @@ class ProviderResource extends Resource
                                 ->schema([
                                     Forms\Components\TextInput::make('client_id')
                                         ->label('Client ID')
+                                        ->helperText('The provider Client ID.')
                                         ->maxLength(255),
                                     Forms\Components\TextInput::make('client_secret')
                                         ->label('Client Secret')
+                                        ->helperText('The provider Client secret.')
                                         ->nullable()
                                         ->maxLength(255),
                                 ]),
                             Forms\Components\Wizard\Step::make('Endpoints')
+                                ->live()
                                 ->icon('heroicon-o-link')
+                                ->visible(function (Forms\Get $get) {
+                                    if ($provider = $get('provider')) {
+                                        $provider = \App\Models\Enums\Provider::from($provider);
+
+                                        if ($provider->isPreconfigured()) {
+                                            return false;
+                                        }
+
+                                        return in_array($provider->getType(), [ProviderType::OIDC, ProviderType::OAUTH]);
+                                    }
+
+                                    return false;
+                                })
                                 ->schema([
                                     Forms\Components\TextInput::make('authorization_endpoint')
+                                        ->helperText('The base authorization URL.')
                                         ->maxLength(255),
                                     Forms\Components\TextInput::make('token_endpoint')
+                                        ->helperText('The base token URL.')
                                         ->maxLength(255),
                                     Forms\Components\TextInput::make('userinfo_endpoint')
+                                        ->helperText('The userinfo URL.')
+                                        ->visible(function (Forms\Get $get) {
+                                            if ($provider = $get('provider')) {
+                                                $provider = \App\Models\Enums\Provider::from($provider);
+
+                                                return $provider->getType() == ProviderType::OIDC;
+                                            }
+
+                                            return false;
+                                        })
                                         ->maxLength(255),
                                 ]),
                         ]),
@@ -144,17 +177,6 @@ class ProviderResource extends Resource
                         Infolists\Components\Tabs\Tab::make('Details')
                             ->icon('heroicon-o-information-circle')
                             ->schema([
-                                Infolists\Components\TextEntry::make('name')
-                                    ->getStateUsing(fn (Provider $provider) => $provider->getRawOriginal('name'))
-                                    ->weight(FontWeight::Bold),
-                                Infolists\Components\TextEntry::make('display_name')
-                                    ->getStateUsing(fn (Provider $record) => $record->display_name ?? __('No display name provided.'))
-                                    ->weight(FontWeight::Bold),
-                                Infolists\Components\TextEntry::make('client_id')
-                                    ->label('Client ID')
-                                    ->copyable(),
-                                Infolists\Components\TextEntry::make('client_secret')
-                                    ->copyable(),
                                 Infolists\Components\TextEntry::make('type')
                                     ->badge(),
                                 Infolists\Components\TextEntry::make('provider')

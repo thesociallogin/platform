@@ -23,7 +23,7 @@ export default function Hero() {
         />
         <div className='pb-24 pt-16 sm:pb-32 sm:pt-24 md:pb-48 md:pt-32'>
           <h1 className='font-display text-balance text-6xl/[0.9] font-medium tracking-tight text-zinc-100 sm:text-7xl/[0.8] md:text-8xl/[0.8]'>
-            Simplify authentication.
+            Authentication simplified.
           </h1>
           <p className='mt-8 max-w-lg text-lg/7 font-medium text-zinc-300/75 sm:text-xl/8'>
             The Social Login helps you seamlessly integrate your app with any authentication service.

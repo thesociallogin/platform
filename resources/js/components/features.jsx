@@ -5,13 +5,13 @@ import { Heading, Subheading } from '@/components/text.jsx'
 
 export default function Features() {
   return (
-    <div className='overflow-hidden'>
+    <div className='overflow-hidden' id='features'>
       <Container className='pb-24'>
         <Subheading>Dashboard</Subheading>
         <Heading as='h2' className='max-w-3xl'>
           A central command for all your apps.
         </Heading>
-        <Screenshot width={1216} height={768} src={appScreenshot} className='mt-16 h-[36rem] sm:h-auto sm:w-[76rem]' />
+        <Screenshot width={1216} height={520} src={appScreenshot} className='mt-16 h-[36rem] sm:h-auto sm:w-[76rem]' />
       </Container>
     </div>
   )
