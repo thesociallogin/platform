@@ -70,6 +70,7 @@ export function Navbar({ banner }) {
 
   const links = [
     { href: route('web.home') + '#features', label: 'Features' },
+    { href: route('web.home') + '#pricing', label: 'Pricing' },
     { href: route('web.home') + '#developers', label: 'Developers' },
     { href: route('filament.platform.tenant'), label: 'Login', newTab: true }
   ]

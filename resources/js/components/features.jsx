@@ -5,7 +5,7 @@ import { Heading, Subheading } from '@/components/text.jsx'
 
 export default function Features() {
   return (
-    <div className='overflow-hidden' id='features'>
+    <div className='overflow-hidden'>
       <Container className='pb-24'>
         <Subheading>Dashboard</Subheading>
         <Heading as='h2' className='max-w-3xl'>

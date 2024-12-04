@@ -69,7 +69,7 @@ function BentoSection() {
 
 function DarkBentoSection() {
   return (
-    <div className='mx-2 mt-2 rounded-4xl bg-zinc-900 py-32' id='developers'>
+    <div className='mx-2 rounded-4xl bg-zinc-900 py-32'>
       <Container>
         <Subheading dark>Integration</Subheading>
         <Heading as='h3' dark className='mt-2 max-w-3xl'>
@@ -123,16 +123,22 @@ export default function Home() {
     <div className='overflow-hidden'>
       <Hero />
       <main>
-        <Container className='mt-10'>
-          <LogoCloud />
-        </Container>
-        <div className='bg-gradient-to-b from-white from-50% to-gray-100 py-32'>
+        <section className='mt-10' id='providers'>
+          <Container>
+            <LogoCloud />
+          </Container>
+        </section>
+        <section className='bg-gradient-to-b from-white from-50% to-zinc-100 py-32' id='features'>
           <Features />
           <BentoSection />
-        </div>
-        <DarkBentoSection />
+        </section>
+        <section className='bg-zinc-100' id='developers'>
+          <DarkBentoSection />
+        </section>
+        <section className='bg-gradient-to-b from-zinc-100 from-50% to-white' id='testimonials'>
+          <Testimonials />
+        </section>
       </main>
-      <Testimonials />
       <Footer />
     </div>
   )

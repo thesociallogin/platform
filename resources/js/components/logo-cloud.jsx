@@ -1,3 +1,12 @@
+import { faDiscord } from '@fortawesome/free-brands-svg-icons/faDiscord'
+import { faFacebook } from '@fortawesome/free-brands-svg-icons/faFacebook'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
+import { faLaravel } from '@fortawesome/free-brands-svg-icons/faLaravel'
+import { faReact } from '@fortawesome/free-brands-svg-icons/faReact'
+import { faSymfony } from '@fortawesome/free-brands-svg-icons/faSymfony'
+import { faVuejs } from '@fortawesome/free-brands-svg-icons/faVuejs'
+import { faXTwitter } from '@fortawesome/free-brands-svg-icons/faXTwitter'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { clsx } from 'clsx'
 
 export function LogoCloud({ className }) {
@@ -8,11 +17,14 @@ export function LogoCloud({ className }) {
         'flex justify-between max-sm:mx-auto max-sm:max-w-md max-sm:flex-wrap max-sm:justify-evenly max-sm:gap-x-4 max-sm:gap-y-4'
       )}
     >
-      {/*<img alt='SavvyCal' src='/logo-cloud/savvycal.svg' className='h-9 max-sm:mx-auto sm:h-8 lg:h-12' />*/}
-      {/*<img alt='Laravel' src='/logo-cloud/laravel.svg' className='h-9 max-sm:mx-auto sm:h-8 lg:h-12' />*/}
-      {/*<img alt='Tuple' src='/logo-cloud/tuple.svg' className='h-9 max-sm:mx-auto sm:h-8 lg:h-12' />*/}
-      {/*<img alt='Transistor' src='/logo-cloud/transistor.svg' className='h-9 max-sm:mx-auto sm:h-8 lg:h-12' />*/}
-      {/*<img alt='Statamic' src='/logo-cloud/statamic.svg' className='h-9 max-sm:mx-auto sm:h-8 lg:h-12' />*/}
+      <FontAwesomeIcon icon={faGoogle} className='size-10 text-zinc-800' />
+      <FontAwesomeIcon icon={faFacebook} className='size-10 text-zinc-800' />
+      <FontAwesomeIcon icon={faXTwitter} className='size-10 text-zinc-800' />
+      <FontAwesomeIcon icon={faDiscord} className='size-10 text-zinc-800' />
+      <FontAwesomeIcon icon={faLaravel} className='size-10 text-zinc-800' />
+      <FontAwesomeIcon icon={faSymfony} className='size-10 text-zinc-800' />
+      <FontAwesomeIcon icon={faReact} className='size-10 text-zinc-800' />
+      <FontAwesomeIcon icon={faVuejs} className='size-10 text-zinc-800' />
     </div>
   )
 }

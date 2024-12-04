@@ -1,4 +1,5 @@
 import { PlusGrid, PlusGridItem, PlusGridRow } from '@/components/plus-grid'
+import { useRoute } from 'ziggy-js'
 import { Container } from './container'
 import { Gradient } from './gradient'
 import { Link } from './link'
@@ -7,6 +8,8 @@ import { Subheading } from './text'
 import { Button } from './ui/button.jsx'
 
 function CallToAction() {
+  const route = useRoute()
+
   return (
     <div className='relative pb-16 pt-20 text-center sm:py-24'>
       <hgroup>
@@ -21,8 +24,10 @@ function CallToAction() {
         Get the cheat codes for selling and unlock your team&apos;s revenue potential.
       </p>
       <div className='mt-6'>
-        <Button variant='secondary' className='w-full sm:w-auto' href='#'>
-          Get started
+        <Button variant='secondary' asChild={true} className='w-full sm:w-auto'>
+          <Link href={route('filament.platform.auth.register')} target='_blank'>
+            Get started
+          </Link>
         </Button>
       </div>
     </div>
@@ -46,36 +51,40 @@ function SitemapLink(props) {
 }
 
 function Sitemap() {
+  const route = useRoute()
+
   return (
     <>
       <div>
         <SitemapHeading>Product</SitemapHeading>
         <SitemapLinks>
-          <SitemapLink href='/pricing'>Pricing</SitemapLink>
-          <SitemapLink href='#'>Analysis</SitemapLink>
-          <SitemapLink href='#'>API</SitemapLink>
+          <SitemapLink href={route('web.home') + '#features'}>Features</SitemapLink>
+          <SitemapLink href={route('web.home') + '#pricing'}>Pricing</SitemapLink>
+          <SitemapLink href={route('web.home') + '#developers'}>Developers</SitemapLink>
+          <SitemapLink href={route('filament.platform.tenant')} target='_blank'>
+            Login
+          </SitemapLink>
         </SitemapLinks>
       </div>
       <div>
         <SitemapHeading>Company</SitemapHeading>
         <SitemapLinks>
           <SitemapLink href='#'>Careers</SitemapLink>
-          <SitemapLink href='/blog'>Blog</SitemapLink>
-          <SitemapLink href='/company'>Company</SitemapLink>
+          <SitemapLink href='#'>Blog</SitemapLink>
+          <SitemapLink href='#'>Company</SitemapLink>
         </SitemapLinks>
       </div>
       <div>
         <SitemapHeading>Support</SitemapHeading>
         <SitemapLinks>
-          <SitemapLink href='#'>Help center</SitemapLink>
-          <SitemapLink href='#'>Community</SitemapLink>
+          <SitemapLink href='#'>Help Center</SitemapLink>
         </SitemapLinks>
       </div>
       <div>
         <SitemapHeading>Company</SitemapHeading>
         <SitemapLinks>
-          <SitemapLink href='#'>Terms of service</SitemapLink>
-          <SitemapLink href='#'>Privacy policy</SitemapLink>
+          <SitemapLink href='#'>Terms of Service</SitemapLink>
+          <SitemapLink href='#'>Privacy Policy</SitemapLink>
         </SitemapLinks>
       </div>
     </>
@@ -143,9 +152,8 @@ function Copyright() {
 export function Footer() {
   return (
     <footer>
-      <Gradient className='relative'>
-        <div className='absolute inset-2 rounded-4xl bg-black/40' />
-        <Container>
+      <Gradient className='mx-2 mb-2 rounded-4xl ring-1 ring-inset ring-black/5'>
+        <Container className='relative'>
           <CallToAction />
           <PlusGrid className='pb-16'>
             <PlusGridRow>
